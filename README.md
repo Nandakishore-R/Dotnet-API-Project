@@ -33,6 +33,7 @@ https://yourdomain.com/api/students
   }
 ]
 
+```
 
 2. Get Student by ID
 Description: Retrieves a specific student by their ID.
@@ -44,43 +45,44 @@ id (integer): The unique identifier of the student.
 Response:
 
 200 OK
-
+```json
 {
   "id": 1,
   "name": "John Doe",
   "email": "johndoe@example.com",
   "phoneNumber": "1234567890"
 }
-
+```
 404 Not Found
-
+```json
 {
   "error": "Student not found"
 }
-
+```
 
 3. Create a New Student
 Description: Creates a new student.
 Endpoint: POST /api/students
 
 Request Body:
-
+```json
 {
   "name": "Michael Brown",
   "email": "michaelbrown@example.com",
   "phoneNumber": "1122334455"
 }
-
+```
 Response:
 
 201 Created
-
+```json
 {
   "id": 3,
   "name": "Michael Brown",
   "email": "michaelbrown@example.com",
   "phoneNumber": "1122334455"
 }
+```
 
 4. Update an Existing Student
 Description: Updates the details of an existing student.
@@ -90,23 +92,23 @@ Path Parameter:
 
 id (integer): The unique identifier of the student.
 Request Body:
-
+```json
 {
   "name": "Michael B.",
   "email": "michaelb@example.com",
   "phoneNumber": "1222333444"
 }
-
+```
 Response:
 
 204 No Content
 
 404 Not Found
-
+```json
 {
   "error": "Student not found"
 }
-
+```
 5. Delete a Student
 Description: Deletes a student by their ID.
 Endpoint: DELETE /api/students/{id}
@@ -119,11 +121,11 @@ Response:
 204 No Content
 
 404 Not Found
-
+```json
 {
   "error": "Student not found"
 }
-
+```
 6. Get Student by Email
 Description: Retrieves a specific student by their email address.
 Endpoint: GET /api/students/email/{email}
@@ -134,20 +136,20 @@ email (string): The email of the student.
 Response:
 
 200 OK
-
+```json
 {
   "id": 1,
   "name": "John Doe",
   "email": "johndoe@example.com",
   "phoneNumber": "1234567890"
 }
-
+```
 404 Not Found
-
+```json
 {
   "error": "Student not found"
 }
-
+```
 Validation Rules
 Phone Number: The phone number should be exactly 10 digits long and contain only numeric values.
 Email: Email addresses must be in a valid format.
