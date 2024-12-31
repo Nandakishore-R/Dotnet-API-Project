@@ -9,7 +9,7 @@ This project contains a simple Web API built using ASP.NET Core Web API. The API
 The base URL for accessing the API is:
 
 ```
-https://yourdomain.com/api/students
+https://demos.sreekeshkprabhu.me/nandu/api/students
 ```
 
 ## Endpoints
