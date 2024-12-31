@@ -1,0 +1,56 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '8.0'
+
+    - name: Restore dependencies
+      run: dotnet restore
+
+    - name: Build the project
+      run: dotnet build --configuration Release
+
+    - name: Publish the project
+      run: dotnet publish --configuration Release --output ./publish
+
+    - name: Set up Docker
+      uses: docker/setup-buildx-action@v2
+
+    - name: Login to DockerHub
+      uses: docker/login-action@v2
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+
+    - name: Build Docker image
+      run: |
+        IMAGE_TAG="latest"
+        if [[ ! -z "${GITHUB_SHA}" ]]; then
+          IMAGE_TAG="${GITHUB_SHA}"
+        fi
+        docker build -t nandakishore2000/student-portal-api:$IMAGE_TAG .
+    
+    - name: Push Docker image to DockerHub
+      run: |
+        IMAGE_TAG="latest"
+        if [[ ! -z "${GITHUB_SHA}" ]]; then
+          IMAGE_TAG="${GITHUB_SHA}"
+        fi
+        docker push nandakishore2000/student-portal-api:$IMAGE_TAG
