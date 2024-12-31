@@ -1,30 +1,30 @@
-# See https://aka.ms/customizecontainer to learn how to customize your debug container and how Visual Studio uses this Dockerfile to build your images for faster debugging.
-
-# This stage is used when running from VS in fast mode (Default for Debug configuration)
-FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
-USER $APP_UID
+# Base stage with SDK (for building and running migrations)
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS base
 WORKDIR /app
 EXPOSE 8080
-EXPOSE 8081
 
-
-# This stage is used to build the service project
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+# Build stage
+FROM base AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["APIApplication/APIApplication.csproj", "APIApplication/"]
-RUN dotnet restore "./APIApplication/APIApplication.csproj"
 COPY . .
-WORKDIR "/src/APIApplication"
+RUN dotnet restore "./APIApplication.csproj"
+WORKDIR "/src/."
 RUN dotnet build "./APIApplication.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
-# This stage is used to publish the service project to be copied to the final stage
-FROM build AS publish
-ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./APIApplication.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+# Install dotnet-ef tool
+RUN dotnet tool install --global dotnet-ef
+# Add global tools to PATH
+ENV PATH="$PATH:/root/.dotnet/tools"
 
-# This stage is used in production or when running from VS in regular mode (Default when not using the Debug configuration)
-FROM base AS final
+# Apply migrations during build
+RUN dotnet publish "./APIApplication.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet ef database update --project /src/APIApplication.csproj
+
+# Final stage for production
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
 WORKDIR /app
-COPY --from=publish /app/publish .
+COPY --from=build /app/publish .
+
+# Set runtime entry point
 ENTRYPOINT ["dotnet", "APIApplication.dll"]

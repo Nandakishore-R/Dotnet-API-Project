@@ -12,7 +12,7 @@ namespace APIApplication.ValidationAttributes // Make sure the namespace matches
         { }
 
         // Override the IsValid method to implement custom validation logic
-        public override bool IsValid(object value)
+        public override bool IsValid(object? value)
         {
             if (value == null)
                 return false;

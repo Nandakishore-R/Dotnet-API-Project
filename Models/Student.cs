@@ -10,7 +10,7 @@ namespace APIApplication.Models
         public string Name { get; set; }
 
         [EmailAddress]  // Ensures the email format is valid
-      
+        
         public string Email { get; set; }
 
         [PhoneNumber]
