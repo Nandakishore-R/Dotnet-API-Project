@@ -56,6 +56,19 @@ namespace APIApplication.Controllers
             return Ok(student);  // Return the student object if found
         }
 
+        [HttpGet("phoneNumbers")]
+        public async Task<ActionResult<IEnumerable<string>>> GetPhoneNumbers()
+        {
+            var phoneNumbers = await _context.Students
+                                    .Select(s => s.PhoneNumber)
+                                    .ToListAsync();
+            if (phoneNumbers == null || !phoneNumbers.Any())
+            {
+                return NotFound("No phone numbers found.");
+            }
+            return Ok(phoneNumbers);
+        }
+
 
         // PUT: api/Students/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
