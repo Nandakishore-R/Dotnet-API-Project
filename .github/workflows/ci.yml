@@ -41,7 +41,7 @@ jobs:
 
     - name: Build Docker image
       run: |
-        IMAGE_TAG="latest"
+        IMAGE_TAG="new"
         if [[ ! -z "${GITHUB_SHA}" ]]; then
           IMAGE_TAG="${GITHUB_SHA}"
         fi
@@ -49,7 +49,7 @@ jobs:
     
     - name: Push Docker image to DockerHub
       run: |
-        IMAGE_TAG="latest"
+        IMAGE_TAG="new"
         if [[ ! -z "${GITHUB_SHA}" ]]; then
           IMAGE_TAG="${GITHUB_SHA}"
         fi
